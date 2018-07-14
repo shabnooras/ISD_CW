@@ -1,0 +1,112 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Masterpage.master.cs" Inherits="ISD_CW.Masterpage" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <%-- to initialise and load bootstrap file --%>
+    <link href=" Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .auto-style2 {
+            height: 328px;
+        }
+
+        .auto-style5 {
+            margin-left: 120px;
+        }
+    </style>
+</head>
+<body style="height: 1012px; width: 1933px">
+
+    <%-- making connection to the database --%>
+    <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" SelectCommand="SELECT * FROM [userTable]" OnSelecting="SqlDataSource1_Selecting"></asp:SqlDataSource>
+    <form id="form1" runat="server" class="auto-style2">
+        <p>
+            <%--logo image redirects to home page when clicked--%>
+            <a runat="server" href="~/">
+                <asp:ImageMap ID="ImageMap1" runat="server" ImageUrl="~/images/logo.png" Style="z-index: 1; float: left" Width="400px">
+                </asp:ImageMap>
+            </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                
+                <%--Button for sign in and sign up and redirect to respective pages when clicked--%>
+            <asp:Button ID="MastersigninButton" runat="server" Text="Sign In" PostBackUrl="~/login.aspx" OnClick="MastersigninButton_Click" />
+            &nbsp;
+                <asp:Button ID="MasterSignupbutton" runat="server" Text="Sign Up" OnClick="Button2_Click" PostBackUrl="~/Signup.aspx" />
+            &nbsp;&nbsp;&nbsp;
+                <a runat="server" href="~/shoppingcart">MY CART</a>
+        </p>
+        <p>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
+            &nbsp;
+                <asp:Button ID="Button3" runat="server" Text="Search" />
+        </p>
+
+        <%-- design for the menu bar --%>
+        <asp:Menu ID="Menu1" runat="server" BackColor="#B5C7DE" DynamicHorizontalOffset="2" Font-Names="Verdana" Font-Size="0.8em" ForeColor="#284E98" Orientation="Horizontal" StaticSubMenuIndent="10px" Style="font-size: large">
+            <DynamicHoverStyle BackColor="#284E98" ForeColor="White" />
+            <DynamicMenuItemStyle HorizontalPadding="5px" VerticalPadding="2px" />
+            <DynamicMenuStyle BackColor="#B5C7DE" />
+            <DynamicSelectedStyle BackColor="#507CD1" />
+            <Items>
+                <asp:MenuItem NavigateUrl="~/product_list.aspx" Text="IT Training" Value="IT Training"></asp:MenuItem>
+                <asp:MenuItem Text="Promotions" Value="Promotions"></asp:MenuItem>
+                <asp:MenuItem Text="Location" Value="Location"></asp:MenuItem>
+                <asp:MenuItem Text="Contact" Value="Contact" NavigateUrl="~/Contact.aspx"></asp:MenuItem>
+                <asp:MenuItem NavigateUrl="~/About.aspx" Text="About Us" Value="About Us"></asp:MenuItem>
+                <asp:MenuItem NavigateUrl="~/Default.aspx" Text="Home" Value="Home"></asp:MenuItem>
+            </Items>
+            <StaticHoverStyle BackColor="#284E98" ForeColor="White" />
+            <StaticMenuItemStyle HorizontalPadding="5px" VerticalPadding="2px" />
+            <StaticSelectedStyle BackColor="#507CD1" />
+        </asp:Menu>
+        <br />
+
+        <%-- drag and drop script manager from toolbox for the image slider --%>
+        <asp:ScriptManager ID="ScriptManager1" runat="server">
+        </asp:ScriptManager>
+        <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+            <ContentTemplate>
+                <asp:Image ID="Image1" runat="server" Height="250px" Width="1400px" />
+
+                <%-- automatically changes image within the ~/images/banner folder and displays randomly at intervals of 2000 milliseconds --%>
+                <asp:Timer ID="Timer1" runat="server" Interval="2000" OnTick="Timer1_Tick">
+                </asp:Timer>
+                <br />
+            </ContentTemplate>
+        </asp:UpdatePanel>
+
+        <%-- Listview connected to the "category" database to display the two categories of training provided - courses/certification --%>
+        <div id="CategoryMenu" style="text-align: left" class="auto-style5">
+
+            <asp:ListView ID="categoryList" ItemType="ISD_CW.Models.category" runat="server" SelectMethod="GetCategories" OnSelectedIndexChanged="categoryList_SelectedIndexChanged">
+                <ItemTemplate>
+                    <b style="font-size: large; font-style: normal">
+                        <a href="/product_list.aspx?id=<%#: Item.CategoryID %>"><%#: Item.CategoryName %>
+                    </b></a>
+                </ItemTemplate>
+                <ItemSeparatorTemplate>|  </ItemSeparatorTemplate>
+            </asp:ListView>
+        </div>
+
+        <%-- placeholders to display content in webforms connected to this masterpage --%>
+        <asp:ContentPlaceHolder ID="head" runat="server">
+        </asp:ContentPlaceHolder>
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        </asp:ContentPlaceHolder>
+        <div class="container body-content">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+            <hr />
+            <footer>
+                <p>&copy; <%: DateTime.Now.Year %> -BAS IT Training</p>
+            </footer>
+        </div>
+    </form>
+</body>
+</html>
